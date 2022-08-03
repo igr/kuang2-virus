@@ -1,5 +1,5 @@
 ;
-; Ovde su date neke vrednosti koje se koriste iz windows.h
+; Neke vrednosti koje se koriste iz windows.h
 ;
 
 MAX_PATH						EQU		260

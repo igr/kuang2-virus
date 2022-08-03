@@ -1,7 +1,7 @@
 /***[ThuNderSoft]*************************************************************
 								KUANG2: request
 								   ver: 0.10
-								úùÄÍ WEIRD ÍÄùú
+								     WEIRD
 *****************************************************************************/
 
 /* HISTORY */
@@ -11,15 +11,15 @@
 #include <winsock.h>
 #include "kuang2.h"
 
-// Kod velikih servera Request lista bi trebalo da se dobija dinamiki, tj.
-// da se memorija odvaja pri svakom dodavanju. Po„to ovo nije veliki server
-// ve† mali, Request lista se mo‚e i ovako napraviti.
+// Kod velikih servera Request lista bi trebalo da se dobija dinamiÄki, tj.
+// da se memorija odvaja pri svakom dodavanju. PoÅ¡to ovo nije veliki server
+// veÄ‡ mali, Request lista se moÅ¾e i ovako napraviti.
 REQUEST request[MAXCONN];
 
 /*
 	ClearRequests
 	-------------
-  ş Bri„e celu request listu. */
+  + BriÅ¡e celu request listu. */
 
 void ClearRequests(void)
 {
@@ -34,8 +34,8 @@ void ClearRequests(void)
 /*
 	NewRequest
 	----------
-  ş Pretrazuje Request listu za slobodnim mestom i vra†a njegov index.
-  ş Vra†a -2 ako nema slobonih mesta. */
+  + Pretrazuje Request listu za slobodnim mestom i vraÄ‡a njegov index.
+  + VraÄ‡a -2 ako nema slobonih mesta. */
 
 int NewRequest(void)
 {
@@ -50,8 +50,8 @@ int NewRequest(void)
 /*
 	GetRequest
 	----------
-  ş Pretrazuje Request listu i vra†a index kada se poklope socketi.
-  ş Vra†a -3 ako nema slobonih mesta. */
+  + Pretrazuje Request listu i vraÄ‡a index kada se poklope socketi.
+  + Vraâ€ a -3 ako nema slobonih mesta. */
 
 int GetRequest(SOCKET s)
 {

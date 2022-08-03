@@ -6,6 +6,8 @@
 
 💜 Enjoy.
 
+🐴 Looking for a [trojan](https://github.com/igr/kuang2-trojan) instead?
+
 ## Win32.Weird
 
 It is a non dangerous memory resident parasitic Win32 virus. It writes itself to the end of PE EXE files (Windows executable) by increasing last file section and modifying PE header fields. The virus copy in infected files consists of two parts. First part (starter) is a short routine (about one kilobyte of code and data), the second part is the main virus code (about 10Kb of size) encrypted with silly encryption loop. 
